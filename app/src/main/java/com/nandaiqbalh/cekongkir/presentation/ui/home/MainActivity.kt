@@ -1,12 +1,15 @@
 package com.nandaiqbalh.cekongkir.presentation.ui.home
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.nandaiqbalh.cekongkir.BuildConfig
-
+import com.nandaiqbalh.cekongkir.R
 import com.nandaiqbalh.cekongkir.databinding.ActivityMainBinding
+import com.nandaiqbalh.cekongkir.presentation.ui.home.adapter.CityAdapter
+import com.nandaiqbalh.cekongkir.wrapper.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,13 +25,137 @@ class MainActivity : AppCompatActivity() {
 		_binding = ActivityMainBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 
+		// get city
+		getCity()
+
+		// button action
+		buttonActionListener()
+
+	}
+
+	private fun getCity() {
 		viewModel.getCity(BuildConfig.API_KEY)
 
-		viewModel.cityResult.observe(this){ cityResult ->
+		viewModel.cityResult.observe(this) { cityResult ->
 
-			Log.d("CITY RESULT", cityResult.payload?.rajaongkir?.results.toString())
+			when (cityResult) {
+				is Resource.Loading -> {
+					setLoading(true)
+				}
+
+				is Resource.Error -> {
+					setLoading(false)
+				}
+
+				is Resource.Success -> {
+					setLoading(false)
+
+//					Log.d("CITY RESULT", cityResult.payload?.rajaongkir?.results.toString())
+				}
+
+				else -> {}
+			}
 		}
 
+		viewModel.cityNames.observe(this) { cityNames ->
+
+			when (cityNames) {
+				is Resource.Loading -> {
+					setLoading(true)
+				}
+
+				is Resource.Error -> {
+					setLoading(false)
+				}
+
+				is Resource.Success -> {
+					setLoading(false)
+
+					val adapter = CityAdapter(this, R.layout.dropdown_item_city, R.id.textViewCityName, viewModel, cityNames.data)
+					binding.edtFrom.setAdapter(adapter)
+					binding.edtTo.setAdapter(adapter)
+				}
+
+				else -> {}
+			}
+		}
+
+		binding.edtFrom.setOnItemClickListener { _, _, position, _ ->
+			val selectedCity = binding.edtFrom.adapter.getItem(position) as String
+			val selectedCityId = getCityIdFromName(selectedCity)
+			val selectedCityType = getCityTypeFromName(selectedCity)
+
+			Log.d("Selected Id", selectedCityId.toString())
+			Log.d("Selected Type", selectedCityType.toString())
+			// Now you have the selected city name, ID, and type
+			// You can use this information for further actions, like making an API request
+		}
+
+		binding.edtTo.setOnItemClickListener { _, _, position, _ ->
+			val selectedCity = binding.edtTo.adapter.getItem(position) as String
+			val selectedCityId = getCityIdFromName(selectedCity)
+			val selectedCityType = getCityTypeFromName(selectedCity)
+
+			// Now you have the selected city name, ID, and type
+			// You can use this information for further actions, like making an API request
+		}
+
+	}
+
+	private fun getCityIdFromName(cityName: String?): String? {
+		val cityResult = viewModel.cityResult.value?.payload?.rajaongkir?.results
+		val selectedCity = cityResult?.find { it.city_name == cityName }
+		return selectedCity?.city_id
+	}
+
+	private fun getCityTypeFromName(cityName: String?): String? {
+		val cityResult = viewModel.cityResult.value?.payload?.rajaongkir?.results
+		val selectedCity = cityResult?.find { it.city_name == cityName }
+		return selectedCity?.type
+	}
+
+	private fun buttonActionListener() {
+		binding.btnCheckHarga.setOnClickListener {
+			if (validateForm()) {
+
+			}
+		}
+
+	}
+
+	private fun validateForm(): Boolean {
+		val from = binding.edtFrom.text.toString()
+		val to = binding.edtTo.text.toString()
+		val weight = binding.edtWeight.text.toString()
+
+		var isFormValid = true
+
+		if (from.isEmpty()) {
+			isFormValid = false
+			binding.tilFrom.error = getString(R.string.tv_error_input_blank)
+		} else {
+			binding.tilFrom.error = null
+		}
+
+		if (to.isEmpty()) {
+			isFormValid = false
+			binding.tilTo.error = getString(R.string.tv_error_input_blank)
+		} else {
+			binding.tilTo.error = null
+		}
+
+		if (weight.isEmpty()) {
+			isFormValid = false
+			binding.tilWeight.error = getString(R.string.tv_error_input_blank)
+		} else {
+			binding.tilWeight.error = null
+		}
+
+		return isFormValid
+	}
+
+	private fun setLoading(isLoading: Boolean) {
+		binding.pbMain.isVisible = isLoading
 	}
 
 	override fun onDestroy() {

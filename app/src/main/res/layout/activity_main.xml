@@ -7,6 +7,16 @@
     android:background="@color/background_base"
     tools:context=".presentation.ui.home.MainActivity">
 
+    <ProgressBar
+        android:id="@+id/pb_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/iv_home_banner"
         android:layout_width="match_parent"
@@ -100,10 +110,11 @@
                         android:textColorHint="@color/primary_200"
                         android:textSize="16sp">
 
-                        <com.google.android.material.textfield.TextInputEditText
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/edt_from"
+                            android:padding="16dp"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:inputType="text" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -121,10 +132,11 @@
                         android:textColorHint="@color/primary_200"
                         android:textSize="16sp">
 
-                        <com.google.android.material.textfield.TextInputEditText
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/edt_to"
+                            android:padding="16dp"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:inputType="text" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -151,10 +163,11 @@
                     android:textColorHint="@color/primary_200"
                     android:textSize="16sp">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/edt_weight"
+                        android:padding="16dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -162,7 +175,7 @@
             </androidx.cardview.widget.CardView>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_login"
+                android:id="@+id/btn_check_harga"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"

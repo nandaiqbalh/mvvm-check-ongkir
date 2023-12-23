@@ -10,5 +10,6 @@
     <string name="hint_to">Kabupaten/provinsi</string>
     <string name="btn_check">Cek harga</string>
     <string name="title_weight">Weight (gram)</string>
+    <string name="tv_error_input_blank">Field tidak boleh kosong!</string>
 
 </resources>

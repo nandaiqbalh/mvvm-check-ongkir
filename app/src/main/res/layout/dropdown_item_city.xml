@@ -1,0 +1,26 @@
+<!-- res/layout/dropdown_item_city.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/textViewCityName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:fontFamily="@font/jakartasans_regular"
+        android:textColor="@color/primary_500"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewCityType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:fontFamily="@font/jakartasans_italic"
+        android:textColor="@color/primary_500"
+        />
+
+</LinearLayout>

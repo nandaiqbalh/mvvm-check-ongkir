@@ -20,9 +20,16 @@ class MainActivityViewModel @Inject constructor(
 	private val _cityResult = MutableLiveData<Resource<GetCityResponse>>()
 	val cityResult: LiveData<Resource<GetCityResponse>> get() = _cityResult // LiveData untuk diobservasi di luar kelas
 
+	private val _cityNames = MutableLiveData<Resource<List<String>>>()
+	val cityNames: LiveData<Resource<List<String>>> get() = _cityNames
+
+
 	fun getCity(key: String) {
 		viewModelScope.launch(Dispatchers.IO) {
 			_cityResult.postValue(Resource.Loading())
+
+			// city names
+			_cityNames.postValue(Resource.Loading())
 			try {
 				val data = cityRemoteRepository.getCity(key)
 
@@ -30,6 +37,12 @@ class MainActivityViewModel @Inject constructor(
 				if (data.payload != null) {
 					viewModelScope.launch(Dispatchers.Main) {
 						_cityResult.postValue(Resource.Success(data.payload))
+
+						// city     names
+						val names =
+							Resource.Success(data.payload.rajaongkir.results.map { it.city_name })
+						_cityNames.postValue(names)
+
 					}
 				} else {
 					_cityResult.postValue(Resource.Error(data.exception, null))
