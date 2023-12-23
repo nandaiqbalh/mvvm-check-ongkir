@@ -9,5 +9,6 @@
     <string name="title_to">Dikirim ke</string>
     <string name="hint_to">Kabupaten/provinsi</string>
     <string name="btn_check">Cek harga</string>
+    <string name="title_weight">Weight (gram)</string>
 
 </resources>

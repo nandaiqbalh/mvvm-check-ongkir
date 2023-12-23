@@ -7,7 +7,7 @@ import android.os.Handler
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
-import com.nandaiqbalh.cekongkir.MainActivity
+import com.nandaiqbalh.cekongkir.presentation.ui.home.MainActivity
 import com.nandaiqbalh.cekongkir.databinding.ActivitySplashscreenBinding
 import dagger.hilt.android.AndroidEntryPoint
 
