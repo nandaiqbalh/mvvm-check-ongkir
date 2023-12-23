@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">CekOngkir</string>
+
+    <string name="tv_greetings">Hello,</string>
+    <string name="tv_greetings_sub">Ke mana kamu ingin mengirimkan barang?</string>
+    <string name="card_title">Cek harga ongkos kirim</string>
+    <string name="title_from">Dikirim dari</string>
+    <string name="hint_from">Kabupaten/provinsi</string>
+    <string name="title_to">Dikirim ke</string>
+    <string name="hint_to">Kabupaten/provinsi</string>
+    <string name="btn_check">Cek harga</string>
+
 </resources>
