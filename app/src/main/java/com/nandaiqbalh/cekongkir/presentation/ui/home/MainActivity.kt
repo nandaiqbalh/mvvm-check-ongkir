@@ -30,50 +30,33 @@ class MainActivity : AppCompatActivity() {
 
 		// button action
 		buttonActionListener()
-
 	}
 
 	private fun getCity() {
 		viewModel.getCity(BuildConfig.API_KEY)
 
 		viewModel.cityResult.observe(this) { cityResult ->
-
 			when (cityResult) {
-				is Resource.Loading -> {
-					setLoading(true)
-				}
-
-				is Resource.Error -> {
-					setLoading(false)
-				}
-
+				is Resource.Loading -> setLoading(true)
+				is Resource.Error -> setLoading(false)
 				is Resource.Success -> {
 					setLoading(false)
+					cityResult.payload?.rajaongkir?.results?.let { cities ->
+						// Extract city names and types
+						val cityNames = cities.map { it.city_name }
 
-//					Log.d("CITY RESULT", cityResult.payload?.rajaongkir?.results.toString())
-				}
-
-				else -> {}
-			}
-		}
-
-		viewModel.cityNames.observe(this) { cityNames ->
-
-			when (cityNames) {
-				is Resource.Loading -> {
-					setLoading(true)
-				}
-
-				is Resource.Error -> {
-					setLoading(false)
-				}
-
-				is Resource.Success -> {
-					setLoading(false)
-
-					val adapter = CityAdapter(this, R.layout.dropdown_item_city, R.id.textViewCityName, viewModel, cityNames.data)
-					binding.edtFrom.setAdapter(adapter)
-					binding.edtTo.setAdapter(adapter)
+						// Create a custom adapter to display both names and types
+						val adapter =
+							CityAdapter(
+								this,
+								R.layout.dropdown_item_city,
+								R.id.textViewCityName,
+								viewModel,
+								cityNames
+							)
+						binding.edtFrom.setAdapter(adapter)
+						binding.edtTo.setAdapter(adapter)
+					}
 				}
 
 				else -> {}
@@ -82,45 +65,50 @@ class MainActivity : AppCompatActivity() {
 
 		binding.edtFrom.setOnItemClickListener { _, _, position, _ ->
 			val selectedCity = binding.edtFrom.adapter.getItem(position) as String
-			val selectedCityId = getCityIdFromName(selectedCity)
-			val selectedCityType = getCityTypeFromName(selectedCity)
+			val selectedCityId = getCitydFromPosition(selectedCity, position)
+			val selectedCityTypes = getCityTypeFromPosition(selectedCity, position)
 
 			Log.d("Selected Id", selectedCityId.toString())
-			Log.d("Selected Type", selectedCityType.toString())
-			// Now you have the selected city name, ID, and type
-			// You can use this information for further actions, like making an API request
+			Log.d("Selected Type", selectedCityTypes.toString())
+
 		}
 
 		binding.edtTo.setOnItemClickListener { _, _, position, _ ->
 			val selectedCity = binding.edtTo.adapter.getItem(position) as String
-			val selectedCityId = getCityIdFromName(selectedCity)
-			val selectedCityType = getCityTypeFromName(selectedCity)
+			val selectedCityId = getCitydFromPosition(selectedCity, position)
+			val selectedCityTypes = getCityTypeFromPosition(selectedCity, position)
 
-			// Now you have the selected city name, ID, and type
-			// You can use this information for further actions, like making an API request
+			Log.d("Selected Id", selectedCityId.toString())
+			Log.d("Selected Type", selectedCityTypes.toString())
+
 		}
-
 	}
 
-	private fun getCityIdFromName(cityName: String?): String? {
+	private fun getCitydFromPosition(cityName: String, position: Int): String? {
 		val cityResult = viewModel.cityResult.value?.payload?.rajaongkir?.results
-		val selectedCity = cityResult?.find { it.city_name == cityName }
-		return selectedCity?.city_id
+
+		// Find all cities with the given name
+		val selectedCities = cityResult?.filter { it.city_name == cityName }
+
+		// Use the position directly to get the city type
+		return selectedCities?.getOrNull(position)?.city_id
 	}
 
-	private fun getCityTypeFromName(cityName: String?): String? {
+	private fun getCityTypeFromPosition(cityName: String, position: Int): String? {
 		val cityResult = viewModel.cityResult.value?.payload?.rajaongkir?.results
-		val selectedCity = cityResult?.find { it.city_name == cityName }
-		return selectedCity?.type
+
+		// Find all cities with the given name
+		val selectedCities = cityResult?.filter { it.city_name == cityName }
+
+		return selectedCities?.getOrNull(position)?.type
 	}
 
 	private fun buttonActionListener() {
 		binding.btnCheckHarga.setOnClickListener {
 			if (validateForm()) {
-
+				// Handle form validation success
 			}
 		}
-
 	}
 
 	private fun validateForm(): Boolean {
