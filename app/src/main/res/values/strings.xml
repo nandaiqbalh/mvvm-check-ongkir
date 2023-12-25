@@ -16,5 +16,9 @@
     <string name="tv_sub_pilih_kota_asal">Dari mana barang yang kamu kirimkan?</string>
     <string name="tv_judul_pilih_kota_tujuan">Pilih kota tujuan</string>
     <string name="tv_sub_pilih_kota_tujuan">Ke mana kamu ingin mengirimkan barang?</string>
+    <string name="hint_cari_kota">Cari kota/kabupaten</string>
+    <string name="tv_item_city">Semarang</string>
+    <string name="tv_item_type">Kabupaten</string>
+    <string name="tv_item_province">Jawa Tengah</string>
 
 </resources>

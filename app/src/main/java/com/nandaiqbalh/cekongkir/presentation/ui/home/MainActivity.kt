@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.nandaiqbalh.cekongkir.BuildConfig
 import com.nandaiqbalh.cekongkir.R
+import com.nandaiqbalh.cekongkir.data.remote.model.city.City
 import com.nandaiqbalh.cekongkir.data.remote.model.cost.request.CostRequestBody
 import com.nandaiqbalh.cekongkir.databinding.ActivityMainBinding
 import com.nandaiqbalh.cekongkir.presentation.ui.searchcity.SearchCityActivity
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
 	private var selectedCityOriginId: String? = null
 	private var selectedCityDestinationId: String? = null
 
+	private lateinit var cities : List<City>
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		_binding = ActivityMainBinding.inflate(layoutInflater)
@@ -40,6 +43,8 @@ class MainActivity : AppCompatActivity() {
 		buttonActionListener()
 
 		dropdownKurir()
+
+		setLoading(true)
 	}
 
 	private fun getCity() {
@@ -51,9 +56,9 @@ class MainActivity : AppCompatActivity() {
 				is Resource.Error -> setLoading(false)
 				is Resource.Success -> {
 					setLoading(false)
-					cityResult.payload?.rajaongkir?.results?.let { cities ->
-						// Extract city names and types
-					}
+					cities = cityResult.payload?.rajaongkir!!.results
+
+					Log.d("CITY RESULT", cities.toString())
 				}
 
 				else -> {}
@@ -132,12 +137,14 @@ class MainActivity : AppCompatActivity() {
 		binding.edtFrom.setOnClickListener {
 			val intent= Intent(this@MainActivity, SearchCityActivity::class.java)
 			intent.putExtra("by", "tilfrom")
+			intent.putParcelableArrayListExtra("city_result", ArrayList(cities))
 			startActivity(intent)
 		}
 
 		binding.edtTo.setOnClickListener {
 			val intent= Intent(this@MainActivity, SearchCityActivity::class.java)
 			intent.putExtra("by", "tilto")
+			intent.putParcelableArrayListExtra("city_result", ArrayList(cities))
 			startActivity(intent)
 		}
 	}
@@ -174,7 +181,11 @@ class MainActivity : AppCompatActivity() {
 	}
 
 	private fun setLoading(isLoading: Boolean) {
-		binding.pbMain.isVisible = isLoading
+		if (isLoading){
+			binding.pbMain.visibility = View.VISIBLE
+		} else {
+			binding.pbMain.visibility = View.GONE
+		}
 	}
 
 	override fun onDestroy() {

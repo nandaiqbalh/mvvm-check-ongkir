@@ -7,15 +7,6 @@
     android:background="@color/background_base"
     tools:context=".presentation.ui.home.MainActivity">
 
-    <ProgressBar
-        android:id="@+id/pb_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_home_banner"
@@ -68,10 +59,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
+
 
             <TextView
                 android:id="@+id/tv_title_card"
@@ -83,85 +75,105 @@
                 android:fontFamily="@font/jakartasans_semibold"
                 android:text="@string/card_title"
                 android:textColor="@color/primary_500"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cv_origin_destination"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
+                app:cardElevation="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title_card">
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_from"
-                        android:layout_width="match_parent"
+                    <ProgressBar
+                        android:id="@+id/pb_main"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:fontFamily="@font/jakartasans_regular"
-                        android:hint="@string/title_from"
-                        android:textColorHint="@color/black_200"
-                        android:textSize="16sp"
-                        android:focusable="false"
-                        app:boxStrokeColor="@color/black_200">
+                        android:visibility="gone"
+                        android:layout_gravity="center" />
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/edt_from"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:inputType="text"
-                            android:padding="16dp"
-                            android:focusable="false"
-                            android:editable="false"
-                            android:textColor="@color/black_400" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_to"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:fontFamily="@font/jakartasans_regular"
-                        android:hint="@string/title_to"
-                        android:textColorHint="@color/black_200"
-                        android:textSize="16sp"
-                        android:focusable="false"
-                        app:boxStrokeColor="@color/black_200">
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/edt_to"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_from"
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:inputType="text"
-                            android:padding="16dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
                             android:focusable="false"
-                            android:editable="false"
-                            android:textColor="@color/black_400" />
+                            android:fontFamily="@font/jakartasans_regular"
+                            android:hint="@string/title_from"
+                            android:textColorHint="@color/black_200"
+                            android:textSize="16sp"
+                            app:boxStrokeColor="@color/black_200">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/edt_from"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:inputType="text"
+                                android:padding="16dp"
+                                android:textColor="@color/black_400" />
 
-                </LinearLayout>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_to"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:focusable="false"
+                            android:fontFamily="@font/jakartasans_regular"
+                            android:hint="@string/title_to"
+                            android:textColorHint="@color/black_200"
+                            android:textSize="16sp"
+                            app:boxStrokeColor="@color/black_200">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/edt_to"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:inputType="text"
+                                android:padding="16dp"
+                                android:textColor="@color/black_400" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+                </FrameLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cv_wieight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
+                app:cardElevation="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cv_origin_destination">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_courier"
@@ -190,6 +202,7 @@
 
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cv_courier"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -197,7 +210,9 @@
                 android:layout_marginEnd="16dp"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
+                app:cardElevation="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cv_wieight">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_weight"
@@ -216,8 +231,7 @@
                         android:layout_height="50dp"
                         android:inputType="number"
                         android:padding="16dp"
-                        android:textColor="@color/black_400"
-                         />
+                        android:textColor="@color/black_400" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -234,9 +248,14 @@
                 android:background="@drawable/rounded_gradient_button"
                 android:fontFamily="@font/jakartasans_bold"
                 android:text="@string/btn_check"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cv_courier" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.cardview.widget.CardView>
 
 
