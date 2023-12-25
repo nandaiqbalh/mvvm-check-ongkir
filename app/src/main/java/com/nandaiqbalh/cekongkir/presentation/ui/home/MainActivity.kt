@@ -2,6 +2,7 @@ package com.nandaiqbalh.cekongkir.presentation.ui.home
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -30,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
 		// button action
 		buttonActionListener()
+
+		dropdownKurir()
 	}
 
 	private fun getCity() {
@@ -82,6 +85,14 @@ class MainActivity : AppCompatActivity() {
 			Log.d("Selected Type", selectedCityTypes.toString())
 
 		}
+	}
+
+	private fun dropdownKurir(){
+		val courierNames = arrayOf("JNE", "TIKI", "POS")
+		val spinnerCourier = binding.spinnerCourier
+		val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, courierNames)
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+		spinnerCourier.adapter = adapter
 	}
 
 	private fun getCitydFromPosition(cityName: String, position: Int): String? {
