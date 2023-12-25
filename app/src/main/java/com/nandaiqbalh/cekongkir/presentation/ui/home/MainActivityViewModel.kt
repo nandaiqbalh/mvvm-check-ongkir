@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nandaiqbalh.cekongkir.data.remote.model.city.GetCityResponse
+import com.nandaiqbalh.cekongkir.data.remote.model.cost.GetCostResponse
+import com.nandaiqbalh.cekongkir.data.remote.model.cost.request.CostRequestBody
 import com.nandaiqbalh.cekongkir.data.remote.repository.city.CityRemoteRepository
+import com.nandaiqbalh.cekongkir.data.remote.repository.cost.CostRemoteRepository
 import com.nandaiqbalh.cekongkir.wrapper.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,10 +18,14 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
 	private val cityRemoteRepository: CityRemoteRepository,
+	private val costRemoteRepository: CostRemoteRepository
 ) : ViewModel() {
 
 	private val _cityResult = MutableLiveData<Resource<GetCityResponse>>()
 	val cityResult: LiveData<Resource<GetCityResponse>> get() = _cityResult // LiveData untuk diobservasi di luar kelas
+
+	private val _costResult = MutableLiveData<Resource<GetCostResponse>>()
+	val costResult: LiveData<Resource<GetCostResponse>> get() = _costResult // LiveData untuk diobservasi di luar kelas
 
 
 	fun getCity(key: String) {
@@ -45,4 +52,27 @@ class MainActivityViewModel @Inject constructor(
 		}
 	}
 
+	fun checkCost(key: String, costRequestBody: CostRequestBody) {
+		viewModelScope.launch(Dispatchers.IO) {
+			_costResult.postValue(Resource.Loading())
+
+			try {
+				val data = costRemoteRepository.checkCost(key, costRequestBody)
+
+//				Log.d("PAYLOAD", data.payload.toString())
+				if (data.payload != null) {
+					viewModelScope.launch(Dispatchers.Main) {
+						_costResult.postValue(Resource.Success(data.payload))
+
+					}
+				} else {
+					_costResult.postValue(Resource.Error(data.exception, null))
+				}
+			} catch (e: Exception) {
+				viewModelScope.launch(Dispatchers.Main) {
+					_costResult.postValue(Resource.Error(e, null))
+				}
+			}
+		}
+	}
 }

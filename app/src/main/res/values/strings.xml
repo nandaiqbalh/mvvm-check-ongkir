@@ -2,7 +2,7 @@
     <string name="app_name">CekOngkir</string>
 
     <string name="tv_greetings">Hello,</string>
-    <string name="tv_greetings_sub">Ke mana kamu ingin mengirimkan barang?</string>
+    <string name="tv_greetings_sub">Ingin memerika harga ongkos kirim barangmu?</string>
     <string name="card_title">Cek harga ongkos kirim</string>
     <string name="title_from">Dikirim dari</string>
     <string name="hint_from">Kabupaten/provinsi</string>
@@ -12,5 +12,9 @@
     <string name="title_weight">Berat (gram)</string>
     <string name="tv_error_input_blank">Field tidak boleh kosong!</string>
     <string name="tv_courier">Pilih kurir</string>
+    <string name="tv_judul_pilih_kota_asal">Pilih kota asal</string>
+    <string name="tv_sub_pilih_kota_asal">Dari mana barang yang kamu kirimkan?</string>
+    <string name="tv_judul_pilih_kota_tujuan">Pilih kota tujuan</string>
+    <string name="tv_sub_pilih_kota_tujuan">Ke mana kamu ingin mengirimkan barang?</string>
 
 </resources>

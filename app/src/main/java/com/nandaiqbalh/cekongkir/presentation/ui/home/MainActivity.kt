@@ -1,15 +1,19 @@
 package com.nandaiqbalh.cekongkir.presentation.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.nandaiqbalh.cekongkir.BuildConfig
 import com.nandaiqbalh.cekongkir.R
+import com.nandaiqbalh.cekongkir.data.remote.model.cost.request.CostRequestBody
 import com.nandaiqbalh.cekongkir.databinding.ActivityMainBinding
-import com.nandaiqbalh.cekongkir.presentation.ui.home.adapter.CityAdapter
+import com.nandaiqbalh.cekongkir.presentation.ui.searchcity.SearchCityActivity
 import com.nandaiqbalh.cekongkir.wrapper.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,6 +24,9 @@ class MainActivity : AppCompatActivity() {
 	private val binding get() = _binding!!
 
 	private val viewModel: MainActivityViewModel by viewModels()
+
+	private var selectedCityOriginId: String? = null
+	private var selectedCityDestinationId: String? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -46,19 +53,6 @@ class MainActivity : AppCompatActivity() {
 					setLoading(false)
 					cityResult.payload?.rajaongkir?.results?.let { cities ->
 						// Extract city names and types
-						val cityNames = cities.map { it.city_name }
-
-						// Create a custom adapter to display both names and types
-						val adapter =
-							CityAdapter(
-								this,
-								R.layout.dropdown_item_city,
-								R.id.textViewCityName,
-								viewModel,
-								cityNames
-							)
-						binding.edtFrom.setAdapter(adapter)
-						binding.edtTo.setAdapter(adapter)
 					}
 				}
 
@@ -66,59 +60,85 @@ class MainActivity : AppCompatActivity() {
 			}
 		}
 
-		binding.edtFrom.setOnItemClickListener { _, _, position, _ ->
-			val selectedCity = binding.edtFrom.adapter.getItem(position) as String
-			val selectedCityId = getCitydFromPosition(selectedCity, position)
-			val selectedCityTypes = getCityTypeFromPosition(selectedCity, position)
-
-			Log.d("Selected Id", selectedCityId.toString())
-			Log.d("Selected Type", selectedCityTypes.toString())
-
-		}
-
-		binding.edtTo.setOnItemClickListener { _, _, position, _ ->
-			val selectedCity = binding.edtTo.adapter.getItem(position) as String
-			val selectedCityId = getCitydFromPosition(selectedCity, position)
-			val selectedCityTypes = getCityTypeFromPosition(selectedCity, position)
-
-			Log.d("Selected Id", selectedCityId.toString())
-			Log.d("Selected Type", selectedCityTypes.toString())
-
-		}
 	}
 
-	private fun dropdownKurir(){
+	private fun dropdownKurir() {
 		val courierNames = arrayOf("JNE", "TIKI", "POS")
 		val spinnerCourier = binding.spinnerCourier
+
 		val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, courierNames)
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 		spinnerCourier.adapter = adapter
+
+		// Set the item selected listener
+		spinnerCourier.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+			override fun onItemSelected(
+				parentView: AdapterView<*>,
+				selectedItemView: View?,
+				position: Int,
+				id: Long,
+			) {
+				// Get the selected courier name
+				val selectedCourier = courierNames[position]
+
+				// Do something with the selected courier value
+				Log.d("Selected Courier", selectedCourier)
+			}
+
+			override fun onNothingSelected(parentView: AdapterView<*>) {
+				// Do nothing here if nothing is selected
+			}
+		}
 	}
 
-	private fun getCitydFromPosition(cityName: String, position: Int): String? {
-		val cityResult = viewModel.cityResult.value?.payload?.rajaongkir?.results
-
-		// Find all cities with the given name
-		val selectedCities = cityResult?.filter { it.city_name == cityName }
-
-		// Use the position directly to get the city type
-		return selectedCities?.getOrNull(position)?.city_id
-	}
-
-	private fun getCityTypeFromPosition(cityName: String, position: Int): String? {
-		val cityResult = viewModel.cityResult.value?.payload?.rajaongkir?.results
-
-		// Find all cities with the given name
-		val selectedCities = cityResult?.filter { it.city_name == cityName }
-
-		return selectedCities?.getOrNull(position)?.type
-	}
 
 	private fun buttonActionListener() {
 		binding.btnCheckHarga.setOnClickListener {
 			if (validateForm()) {
-				// Handle form validation success
+
+				val weight = binding.edtWeight.text.toString().toInt()
+				val selectedCourier = binding.spinnerCourier.selectedItem.toString().toLowerCase()
+
+				viewModel.checkCost(
+					BuildConfig.API_KEY,
+					CostRequestBody(
+						BuildConfig.API_KEY,
+						selectedCityOriginId!!,
+						selectedCityDestinationId!!,
+						weight,
+						selectedCourier
+					)
+				)
+
+				viewModel.costResult.observe(this) { costResult ->
+					when (costResult) {
+						is Resource.Loading -> setLoading(true)
+						is Resource.Error -> setLoading(false)
+						is Resource.Success -> {
+							setLoading(false)
+
+							Log.d("COST RESULT", costResult.data.rajaongkir.results.toString())
+							Log.d("ORIGIN", costResult.data.rajaongkir.origin_details.toString())
+							Log.d("DESTINATION", costResult.data.rajaongkir.destination_details.toString())
+
+						}
+
+						else -> {}
+					}
+				}
 			}
+		}
+
+		binding.edtFrom.setOnClickListener {
+			val intent= Intent(this@MainActivity, SearchCityActivity::class.java)
+			intent.putExtra("by", "tilfrom")
+			startActivity(intent)
+		}
+
+		binding.edtTo.setOnClickListener {
+			val intent= Intent(this@MainActivity, SearchCityActivity::class.java)
+			intent.putExtra("by", "tilto")
+			startActivity(intent)
 		}
 	}
 
