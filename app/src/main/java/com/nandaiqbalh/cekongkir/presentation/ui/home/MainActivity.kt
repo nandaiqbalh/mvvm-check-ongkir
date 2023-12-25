@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
@@ -181,10 +182,17 @@ class MainActivity : AppCompatActivity() {
 	}
 
 	private fun setLoading(isLoading: Boolean) {
-		if (isLoading){
+		if (isLoading) {
 			binding.pbMain.visibility = View.VISIBLE
+			binding.overlayLayout.visibility = View.VISIBLE
+			window.setFlags(
+				WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+				WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+			)
 		} else {
 			binding.pbMain.visibility = View.GONE
+			binding.overlayLayout.visibility = View.GONE
+			window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 		}
 	}
 
