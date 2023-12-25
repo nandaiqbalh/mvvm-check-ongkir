@@ -10,6 +10,7 @@ import com.nandaiqbalh.cekongkir.data.remote.model.city.City
 import com.nandaiqbalh.cekongkir.databinding.ItemSearchBinding
 
 class CityAdapter: RecyclerView.Adapter<CityAdapter.HomeViewHolder>() {
+	private var cityList: List<City> = emptyList()
 
 	var itemClickListener: ((item: City) -> Unit)? = null
 

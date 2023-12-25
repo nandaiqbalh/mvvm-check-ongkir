@@ -2,6 +2,8 @@ package com.nandaiqbalh.cekongkir.presentation.ui.searchcity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nandaiqbalh.cekongkir.R
 import com.nandaiqbalh.cekongkir.data.remote.model.city.City
@@ -35,13 +37,46 @@ class SearchCityActivity : AppCompatActivity() {
 				val adapter = CityAdapter()
 				adapter.setList(cities)
 
+				binding.edtSearch.addTextChangedListener(object : TextWatcher {
+					override fun beforeTextChanged(
+						charSequence: CharSequence?,
+						p1: Int,
+						p2: Int,
+						p3: Int,
+					) {
+					}
+
+					override fun onTextChanged(
+						charSequence: CharSequence?,
+						p1: Int,
+						p2: Int,
+						p3: Int,
+					) {
+						val filteredCities = if (charSequence.isNullOrBlank()) {
+							cities
+						} else {
+							cities.filter { city ->
+								city.city_name.contains(charSequence.toString(), true)
+							}
+						}
+						adapter.setList(filteredCities)
+					}
+
+					override fun afterTextChanged(editable: Editable?) {}
+				})
+
+
 				adapter.itemClickListener = {
 //					val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id!!)
 //					findNavController().navigate(action)
 				}
 
 				binding.apply {
-					rvSearch.layoutManager = LinearLayoutManager(this@SearchCityActivity, LinearLayoutManager.VERTICAL, false)
+					rvSearch.layoutManager = LinearLayoutManager(
+						this@SearchCityActivity,
+						LinearLayoutManager.VERTICAL,
+						false
+					)
 					rvSearch.adapter = adapter
 				}
 			}
@@ -54,19 +89,51 @@ class SearchCityActivity : AppCompatActivity() {
 				val adapter = CityAdapter()
 				adapter.setList(cities)
 
+				binding.edtSearch.addTextChangedListener(object : TextWatcher {
+					override fun beforeTextChanged(
+						charSequence: CharSequence?,
+						p1: Int,
+						p2: Int,
+						p3: Int,
+					) {
+					}
+
+					override fun onTextChanged(
+						charSequence: CharSequence?,
+						p1: Int,
+						p2: Int,
+						p3: Int,
+					) {
+						val filteredCities = if (charSequence.isNullOrBlank()) {
+							cities
+						} else {
+							cities.filter { city ->
+								city.city_name.contains(charSequence.toString(), true)
+							}
+						}
+						adapter.setList(filteredCities)
+					}
+
+					override fun afterTextChanged(editable: Editable?) {}
+				})
+
+
 				adapter.itemClickListener = {
 //					val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id!!)
 //					findNavController().navigate(action)
 				}
 
 				binding.apply {
-					rvSearch.layoutManager = LinearLayoutManager(this@SearchCityActivity, LinearLayoutManager.VERTICAL, false)
+					rvSearch.layoutManager = LinearLayoutManager(
+						this@SearchCityActivity,
+						LinearLayoutManager.VERTICAL,
+						false
+					)
 					rvSearch.adapter = adapter
 				}
 			}
 		}
 	}
-
 
 	override fun onDestroy() {
 		super.onDestroy()
