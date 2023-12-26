@@ -32,5 +32,12 @@
 
     <style name="SpinnerPopupTheme" parent="ThemeOverlay.MaterialComponents.TextInputEditText.FilledBox">
         <item name="android:textViewStyle">@style/SpinnerItem</item>
+        <item name="android:fontFamily">@font/jakartasans_regular</item>
     </style>
+
+    <style name="CustomSpinner" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="android:textViewStyle">@style/SpinnerItem</item>
+        <item name="android:fontFamily">@font/jakartasans_regular</item>
+    </style>
+
 </resources>

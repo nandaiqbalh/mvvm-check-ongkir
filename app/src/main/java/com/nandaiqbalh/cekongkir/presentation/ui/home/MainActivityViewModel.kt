@@ -3,7 +3,9 @@ package com.nandaiqbalh.cekongkir.presentation.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.nandaiqbalh.cekongkir.data.local.datastore.DataStoreManager
 import com.nandaiqbalh.cekongkir.data.remote.model.city.GetCityResponse
 import com.nandaiqbalh.cekongkir.data.remote.model.cost.GetCostResponse
 import com.nandaiqbalh.cekongkir.data.remote.model.cost.request.CostRequestBody
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
 	private val cityRemoteRepository: CityRemoteRepository,
-	private val costRemoteRepository: CostRemoteRepository
+	private val costRemoteRepository: CostRemoteRepository,
+	private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
 	private val _cityResult = MutableLiveData<Resource<GetCityResponse>>()
@@ -26,7 +29,6 @@ class MainActivityViewModel @Inject constructor(
 
 	private val _costResult = MutableLiveData<Resource<GetCostResponse>>()
 	val costResult: LiveData<Resource<GetCostResponse>> get() = _costResult // LiveData untuk diobservasi di luar kelas
-
 
 	fun getCity(key: String) {
 		viewModelScope.launch(Dispatchers.IO) {
@@ -75,4 +77,17 @@ class MainActivityViewModel @Inject constructor(
 			}
 		}
 	}
+
+	fun getOriginId(): LiveData<String?> = dataStoreManager.getOriginId.asLiveData()
+
+	fun getOriginName(): LiveData<String?> = dataStoreManager.getOriginName.asLiveData()
+
+	fun getOriginType(): LiveData<String?> = dataStoreManager.getOriginType.asLiveData()
+
+	fun getDestinationId(): LiveData<String?> = dataStoreManager.getDestinationId.asLiveData()
+
+	fun getDestinationName(): LiveData<String?> = dataStoreManager.getDestinationName.asLiveData()
+
+	fun getDestinationType(): LiveData<String?> = dataStoreManager.getDestinationType.asLiveData()
+
 }

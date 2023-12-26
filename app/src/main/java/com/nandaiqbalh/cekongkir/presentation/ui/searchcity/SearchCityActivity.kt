@@ -1,21 +1,30 @@
 package com.nandaiqbalh.cekongkir.presentation.ui.searchcity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nandaiqbalh.cekongkir.R
 import com.nandaiqbalh.cekongkir.data.remote.model.city.City
 import com.nandaiqbalh.cekongkir.databinding.ActivitySearchCityBinding
+import com.nandaiqbalh.cekongkir.presentation.ui.home.MainActivity
 import com.nandaiqbalh.cekongkir.presentation.ui.searchcity.adapter.CityAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchCityActivity : AppCompatActivity() {
 
 	private var _binding: ActivitySearchCityBinding? = null
 	private val binding get() = _binding!!
 
 	private var clickedBy: String = ""
+	private var selectedCity: City? = null
+
+	private val viewModel:SearchCityViewModel by viewModels()
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		_binding = ActivitySearchCityBinding.inflate(layoutInflater)
@@ -67,8 +76,13 @@ class SearchCityActivity : AppCompatActivity() {
 
 
 				adapter.itemClickListener = {
-//					val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id!!)
-//					findNavController().navigate(action)
+					val intent = Intent(this@SearchCityActivity, MainActivity::class.java)
+
+					viewModel.setOriginId(it.city_id)
+					viewModel.setOriginName(it.city_name)
+					viewModel.setOriginType(it.type)
+
+					startActivity(intent)
 				}
 
 				binding.apply {
@@ -119,8 +133,13 @@ class SearchCityActivity : AppCompatActivity() {
 
 
 				adapter.itemClickListener = {
-//					val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id!!)
-//					findNavController().navigate(action)
+					val intent = Intent(this@SearchCityActivity, MainActivity::class.java)
+
+					viewModel.setDestinationId(it.city_id)
+					viewModel.setDestinationName(it.city_name)
+					viewModel.setDestinationType(it.type)
+
+					startActivity(intent)
 				}
 
 				binding.apply {

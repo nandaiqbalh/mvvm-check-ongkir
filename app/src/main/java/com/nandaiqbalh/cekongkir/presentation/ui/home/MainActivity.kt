@@ -9,7 +9,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import com.nandaiqbalh.cekongkir.BuildConfig
 import com.nandaiqbalh.cekongkir.R
 import com.nandaiqbalh.cekongkir.data.remote.model.city.City
@@ -27,10 +26,8 @@ class MainActivity : AppCompatActivity() {
 
 	private val viewModel: MainActivityViewModel by viewModels()
 
-	private var selectedCityOriginId: String? = null
-	private var selectedCityDestinationId: String? = null
 
-	private lateinit var cities : List<City>
+	private lateinit var cities: List<City>
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -46,6 +43,20 @@ class MainActivity : AppCompatActivity() {
 		dropdownKurir()
 
 		setLoading(true)
+
+		viewModel.getOriginName().observe(this){
+			originName ->
+			if (originName!= null){
+				binding.edtFrom.setText(originName.toString())
+			}
+		}
+
+		viewModel.getDestinationName().observe(this){
+			destinationName ->
+			if (destinationName!= null){
+				binding.edtTo.setText(destinationName.toString())
+			}
+		}
 	}
 
 	private fun getCity() {
@@ -58,13 +69,13 @@ class MainActivity : AppCompatActivity() {
 				is Resource.Success -> {
 					setLoading(false)
 					cities = cityResult.payload?.rajaongkir!!.results
-
-					Log.d("CITY RESULT", cities.toString())
 				}
 
 				else -> {}
 			}
+
 		}
+
 
 	}
 
@@ -102,15 +113,35 @@ class MainActivity : AppCompatActivity() {
 		binding.btnCheckHarga.setOnClickListener {
 			if (validateForm()) {
 
+
 				val weight = binding.edtWeight.text.toString().toInt()
 				val selectedCourier = binding.spinnerCourier.selectedItem.toString().toLowerCase()
 
+				var selectedOriginId = ""
+				viewModel.getOriginId().observe(this) { originId ->
+					if (originId != null) {
+						selectedOriginId = originId
+						// Perform any other operations related to the updated value
+
+						Log.d("SELECTEDDD", originId.toString())
+						Log.d("SELECTEDDDIDDD", selectedOriginId.toString())
+
+					}
+				}
+
+				var selectedDestinationId = ""
+				viewModel.getDestinationId().observe(this) { destinationId ->
+					if (destinationId != null) {
+						selectedDestinationId = destinationId
+						// Perform any other operations related to the updated value
+					}
+				}
+
 				viewModel.checkCost(
-					BuildConfig.API_KEY,
-					CostRequestBody(
+					BuildConfig.API_KEY, CostRequestBody(
 						BuildConfig.API_KEY,
-						selectedCityOriginId!!,
-						selectedCityDestinationId!!,
+						selectedOriginId,
+						selectedDestinationId,
 						weight,
 						selectedCourier
 					)
@@ -125,7 +156,10 @@ class MainActivity : AppCompatActivity() {
 
 							Log.d("COST RESULT", costResult.data.rajaongkir.results.toString())
 							Log.d("ORIGIN", costResult.data.rajaongkir.origin_details.toString())
-							Log.d("DESTINATION", costResult.data.rajaongkir.destination_details.toString())
+							Log.d(
+								"DESTINATION",
+								costResult.data.rajaongkir.destination_details.toString()
+							)
 
 						}
 
@@ -136,14 +170,14 @@ class MainActivity : AppCompatActivity() {
 		}
 
 		binding.edtFrom.setOnClickListener {
-			val intent= Intent(this@MainActivity, SearchCityActivity::class.java)
+			val intent = Intent(this@MainActivity, SearchCityActivity::class.java)
 			intent.putExtra("by", "tilfrom")
 			intent.putParcelableArrayListExtra("city_result", ArrayList(cities))
 			startActivity(intent)
 		}
 
 		binding.edtTo.setOnClickListener {
-			val intent= Intent(this@MainActivity, SearchCityActivity::class.java)
+			val intent = Intent(this@MainActivity, SearchCityActivity::class.java)
 			intent.putExtra("by", "tilto")
 			intent.putParcelableArrayListExtra("city_result", ArrayList(cities))
 			startActivity(intent)
