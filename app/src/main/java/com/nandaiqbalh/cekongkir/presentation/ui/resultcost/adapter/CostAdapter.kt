@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nandaiqbalh.cekongkir.data.remote.model.cost.CostX
 import com.nandaiqbalh.cekongkir.data.remote.model.cost.Result
 import com.nandaiqbalh.cekongkir.databinding.ItemResultBinding
+import java.text.NumberFormat
+import java.util.Locale
 
 class CostAdapter: RecyclerView.Adapter<CostAdapter.HomeViewHolder>() {
 	private var costList: List<CostX> = emptyList()
@@ -41,20 +43,12 @@ class CostAdapter: RecyclerView.Adapter<CostAdapter.HomeViewHolder>() {
 		@SuppressLint("SetTextI18n")
 		fun bind(result: Result) {
 			binding.apply {
-				val costsText = result.costs.joinToString(", ") { cost ->
-					"${cost.description}, ${cost.service}"
+				// Display costs information
+				val costsText = result.costs.joinToString("\n") { cost ->
+					val formattedValue = formatCurrency(cost.cost[0].value)
+					"${cost.description} (${cost.service})\nHarga: $formattedValue\nPerkiraan hari: ${cost.cost[0].etd} hari\n"
 				}
-				tvService.text = costsText
-
-				val pricesText = result.costs.joinToString(", ") { cost ->
-					"${cost.cost[0].value}"
-				}
-				tvPrice.text = pricesText
-
-				val estimationsText = result.costs.joinToString(", ") { cost ->
-					"${cost.cost[0].etd}"
-				}
-				tvEstimationDay.text = estimationsText
+				tvPrice.text = costsText
 			}
 
 
@@ -62,6 +56,12 @@ class CostAdapter: RecyclerView.Adapter<CostAdapter.HomeViewHolder>() {
 				itemClickListener?.invoke(result)
 
 			}
+		}
+
+		private fun formatCurrency(value: Int): String {
+			val localeID = Locale("id", "ID")
+			val formatRupiah = NumberFormat.getCurrencyInstance(localeID)
+			return formatRupiah.format(value.toLong())
 		}
 	}
 

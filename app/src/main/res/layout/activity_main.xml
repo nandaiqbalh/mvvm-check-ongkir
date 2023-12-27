@@ -236,6 +236,8 @@
                     android:hint="@string/title_weight"
                     android:textColorHint="@color/black_200"
                     android:textSize="16sp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="true"
                     app:boxStrokeColor="@color/black_200">
 
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
