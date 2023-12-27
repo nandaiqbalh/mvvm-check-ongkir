@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.nandaiqbalh.cekongkir.BuildConfig
 import com.nandaiqbalh.cekongkir.R
 import com.nandaiqbalh.cekongkir.data.remote.model.city.City
-import com.nandaiqbalh.cekongkir.data.remote.model.cost.request.CostRequestBody
 import com.nandaiqbalh.cekongkir.databinding.ActivityMainBinding
+import com.nandaiqbalh.cekongkir.presentation.ui.resultcost.ResultCostActivity
 import com.nandaiqbalh.cekongkir.presentation.ui.searchcity.SearchCityActivity
 import com.nandaiqbalh.cekongkir.wrapper.Resource
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,16 +44,14 @@ class MainActivity : AppCompatActivity() {
 
 		setLoading(true)
 
-		viewModel.getOriginName().observe(this){
-			originName ->
-			if (originName!= null){
+		viewModel.getOriginName().observe(this) { originName ->
+			if (!(originName == null && originName == "")) {
 				binding.edtFrom.setText(originName.toString())
 			}
 		}
 
-		viewModel.getDestinationName().observe(this){
-			destinationName ->
-			if (destinationName!= null){
+		viewModel.getDestinationName().observe(this) { destinationName ->
+			if (!(destinationName == null && destinationName == "")) {
 				binding.edtTo.setText(destinationName.toString())
 			}
 		}
@@ -113,7 +111,6 @@ class MainActivity : AppCompatActivity() {
 		binding.btnCheckHarga.setOnClickListener {
 			if (validateForm()) {
 
-
 				val weight = binding.edtWeight.text.toString().toInt()
 				val selectedCourier = binding.spinnerCourier.selectedItem.toString().toLowerCase()
 
@@ -137,35 +134,22 @@ class MainActivity : AppCompatActivity() {
 					}
 				}
 
-				viewModel.checkCost(
-					BuildConfig.API_KEY, CostRequestBody(
-						BuildConfig.API_KEY,
-						selectedOriginId,
-						selectedDestinationId,
-						weight,
-						selectedCourier
-					)
-				)
+				var intent = Intent(this@MainActivity, ResultCostActivity::class.java)
 
-				viewModel.costResult.observe(this) { costResult ->
-					when (costResult) {
-						is Resource.Loading -> setLoading(true)
-						is Resource.Error -> setLoading(false)
-						is Resource.Success -> {
-							setLoading(false)
+				intent.putExtra("weight", weight.toString())
+				intent.putExtra("selectedCourier", selectedCourier.toString())
+				intent.putExtra("selectedOriginId", selectedOriginId.toString())
+				intent.putExtra("selectedDestinationId", selectedDestinationId.toString())
 
-							Log.d("COST RESULT", costResult.data.rajaongkir.results.toString())
-							Log.d("ORIGIN", costResult.data.rajaongkir.origin_details.toString())
-							Log.d(
-								"DESTINATION",
-								costResult.data.rajaongkir.destination_details.toString()
-							)
+				viewModel.setOriginId("")
+				viewModel.setOriginName("")
+				viewModel.setOriginType("")
 
-						}
+				viewModel.setDestinationId("")
+				viewModel.setDestinationName("")
+				viewModel.setDestinationType("")
 
-						else -> {}
-					}
-				}
+				startActivity(intent)
 			}
 		}
 

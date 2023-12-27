@@ -20,5 +20,8 @@
     <string name="tv_item_city">Semarang</string>
     <string name="tv_item_type">Kabupaten</string>
     <string name="tv_item_province">Jawa Tengah</string>
+    <string name="tv_title_result">Ini dia perkiraan ongkos kirimmu :)</string>
+    <string name="tv_title_origin">Asal barang:</string>
+    <string name="tv_title_destination">Tujuan barang:</string>
 
 </resources>
